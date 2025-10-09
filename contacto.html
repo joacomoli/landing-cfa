@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Contacto - CFA & Asociados. Broker de Seguros en Argentina. Múltiples formas de contacto: teléfono, WhatsApp, email y oficina.">
+    <meta name="keywords" content="contacto seguros, broker seguros argentina, teléfono seguros, whatsapp seguros">
+    <title>Contacto - CFA & Asociados</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome para íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="logocfa.png">
+    <link rel="shortcut icon" type="image/png" href="logocfa.png">
+    <link rel="apple-touch-icon" href="logocfa.png">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <a href="index.html" class="logo-link">
+                        <img src="logocfa.png" alt="CFA & Asociados Logo" class="logo-image">
+                        <div class="logo-text-container">
+                            <h1 class="logo-title">CFA & Asociados</h1>
+                            <p class="logo-subtitle">Broker de Seguros</p>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="nav-menu" id="nav-menu">
+                    <ul class="nav-list">
+                        <li class="nav-item"><a href="index.html" class="nav-link">Inicio</a></li>
+                        <li class="nav-item"><a href="index.html#servicios" class="nav-link">Servicios</a></li>
+                        <li class="nav-item"><a href="index.html#beneficios" class="nav-link">Beneficios</a></li>
+                        <li class="nav-item"><a href="index.html#cotizacion" class="nav-link">Cotización</a></li>
+                        <li class="nav-item"><a href="contacto.html" class="nav-link active">Contacto</a></li>
+                    </ul>
+                </div>
+                
+                <div class="nav-toggle" id="nav-toggle">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="contacto-hero">
+        <div class="container">
+            <div class="contacto-hero-content">
+                <h1 class="contacto-hero-title">Contactanos</h1>
+                <p class="contacto-hero-subtitle">Estamos para ayudarte. Elegí la forma de contacto que te resulte más cómoda y te responderemos a la brevedad.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contacto Section -->
+    <section class="contacto-page">
+        <div class="container">
+            <div class="contacto-content">
+                <div class="contacto-info">
+                    <h2 class="section-title">Múltiples formas de contacto</h2>
+                    <p class="contacto-subtitle">Nuestro equipo está disponible para atenderte de la manera que prefieras. Resolvemos tus consultas de forma rápida y personalizada.</p>
+                    
+                    <div class="contacto-methods">
+                        <div class="contact-method">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h3>Teléfono</h3>
+                                <p>+54 9 11 4470-6706</p>
+                                <span>Lun a Vie 9:00 - 18:00</span>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <div class="contact-icon">
+                                <i class="fab fa-whatsapp"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h3>WhatsApp</h3>
+                                <p>+54 9 11 4470-6706</p>
+                                <span>Disponible 24/7</span>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h3>Email</h3>
+                                <p>info@cfaseguros.com.ar</p>
+                                <span>Respuesta en 2 horas</span>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h3>Oficina</h3>
+                                <p>Buenos Aires, Argentina</p>
+                                <span>Consultar dirección</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                
+                <div class="contacto-form-container">
+                    <div class="contacto-form">
+                        <h3>Envianos un mensaje</h3>
+                        <p class="form-description">Completá el formulario y te contactaremos a la brevedad para resolver tu consulta.</p>
+                        
+                        <form id="contacto-form" action="process_contacto.php" method="POST">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="contact-nombre">Nombre completo *</label>
+                                    <input type="text" id="contact-nombre" name="nombre" placeholder="Tu nombre completo" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact-email">Email *</label>
+                                    <input type="email" id="contact-email" name="email" placeholder="tu@email.com" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="contact-telefono">Teléfono</label>
+                                    <input type="tel" id="contact-telefono" name="telefono" placeholder="+54 11 1234-5678">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact-asunto">Asunto *</label>
+                                    <select id="contact-asunto" name="asunto" required>
+                                        <option value="">Seleccioná un asunto</option>
+                                        <option value="cotizacion">Solicitar Cotización</option>
+                                        <option value="siniestro">Reportar Siniestro</option>
+                                        <option value="consulta">Consulta General</option>
+                                        <option value="reclamo">Reclamo</option>
+                                        <option value="otro">Otro</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="contact-mensaje">Mensaje *</label>
+                                <textarea id="contact-mensaje" name="mensaje" rows="5" placeholder="Describí tu consulta o situación..." required></textarea>
+                            </div>
+                            
+                            <div class="form-group checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="acepto-contacto" name="acepto-contacto" required>
+                                    
+                                    Acepto los términos y condiciones y autorizo el tratamiento de mis datos personales *
+                                </label>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-full">
+                                <i class="fas fa-paper-plane"></i>
+                                Enviar Mensaje
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mapa Section 
+    <section class="mapa-section">
+        <div class="container">
+            <h2 class="section-title">Nuestra Ubicación</h2>
+                <div class="mapa-container">
+                    <div class="mapa-placeholder">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h3>Buenos Aires, Argentina</h3>
+                        <p>Contactanos para conocer nuestra ubicación exacta<br>
+                        Te brindamos indicaciones personalizadas</p>
+                        <a href="contacto.html" class="btn btn-secondary">
+                            <i class="fas fa-phone"></i>
+                            Consultar Dirección
+                        </a>
+                    </div>
+                </div>
+        </div>
+    </section>
+-->
+    <!-- Botón flotante de WhatsApp -->
+    <div class="whatsapp-float">
+        <a href="https://wa.me/5491144706706" target="_blank" class="whatsapp-btn" aria-label="Contactar por WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+            <span class="whatsapp-tooltip">¡Escribinos por WhatsApp!</span>
+        </a>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <img src="logocfa.png" alt="CFA & Asociados Logo" class="logo-image">
+                        <div class="logo-text-container">
+                            <h3>CFA & Asociados</h3>
+                            <p>Broker de Seguros</p>
+                        </div>
+                    </div>
+                    <p class="footer-description">Tu tranquilidad es nuestra prioridad. Asesoramiento personalizado en seguros para empresas y personas.</p>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="footer-section">
+                        <h4>Servicios</h4>
+                        <ul>
+                            <li><a href="index.html#servicios">Seguro Automotor</a></li>
+                            <li><a href="index.html#servicios">Seguro de Hogar</a></li>
+                            <li><a href="index.html#servicios">Accidentes Personales</a></li>
+                            <li><a href="index.html#servicios">Seguros Empresariales</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Empresa</h4>
+                        <ul>
+                            <li><a href="index.html#beneficios">Sobre Nosotros</a></li>
+                            <li><a href="contacto.html">Contacto</a></li>
+                            <li><a href="index.html#cotizacion">Cotización</a></li>
+                            <li><a href="#">Términos y Condiciones</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Contacto</h4>
+                        <ul>
+                            <li><i class="fas fa-phone"></i> +54 9 11 4470-6706</li>
+                            <li><i class="fab fa-whatsapp"></i> +54 9 11 4470-6706</li>
+                            <li><i class="fas fa-envelope"></i> info@cfaseguros.com.ar</li>
+                            <li><i class="fas fa-map-marker-alt"></i> Buenos Aires, Argentina</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 CFA & Asociados. Todos los derechos reservados.</p>
+                <div class="footer-social">
+                    <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
