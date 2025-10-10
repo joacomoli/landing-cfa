@@ -342,7 +342,7 @@ function initializeContactForm() {
             submitBtn.disabled = true;
             
             // Enviar datos a PHP
-            fetch('process_contacto.php', {
+            fetch('contact.php', {
                 method: 'POST',
                 body: formData
             })

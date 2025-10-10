@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // Verificar datos requeridos
-if (empty($_POST['nombre']) || empty($_POST['email']) || empty($_POST['asunto']) || empty($_POST['mensaje'])) {
+if (empty($_POST['nombre']) || empty($_POST['email']) || empty($_POST['mensaje'])) {
     http_response_code(400);
     exit;
 }
@@ -19,7 +19,7 @@ if (empty($_POST['nombre']) || empty($_POST['email']) || empty($_POST['asunto'])
 $nombre = trim(htmlspecialchars($_POST['nombre']));
 $email = trim($_POST['email']);
 $telefono = !empty($_POST['telefono']) ? trim(htmlspecialchars($_POST['telefono'])) : '';
-$asunto = trim(htmlspecialchars($_POST['asunto']));
+$asunto = !empty($_POST['asunto']) ? trim(htmlspecialchars($_POST['asunto'])) : '';
 $mensaje = trim(htmlspecialchars($_POST['mensaje']));
 
 // Validar email
@@ -44,25 +44,15 @@ try {
     
     $contactoId = $pdo->lastInsertId();
     
-    // Preparar email
-    $asunto_nombres = [
-        'cotizacion' => 'Solicitar Cotización',
-        'siniestro' => 'Reportar Siniestro',
-        'consulta' => 'Consulta General',
-        'reclamo' => 'Reclamo',
-        'otro' => 'Otro'
-    ];
-    
-    $asunto_nombre = $asunto_nombres[$asunto] ?? $asunto;
-    
-    $subject = "Nuevo Mensaje de Contacto - CFA & Asociados";
+    // Enviar email
+    $subject = "Nuevo mensaje - CFA & Asociados";
     $emailBody = "
-Nuevo mensaje de contacto recibido:
+Nuevo mensaje recibido:
 
 Nombre: $nombre
 Email: $email
 Teléfono: $telefono
-Asunto: $asunto_nombre
+Asunto: $asunto
 
 Mensaje:
 $mensaje

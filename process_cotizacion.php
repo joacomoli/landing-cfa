@@ -1,113 +1,124 @@
 <?php
-require_once 'config/database.php';
-require_once 'config/email.php';
+// Procesador de cotización simple - CFA & Asociados
+error_reporting(0);
+ini_set('display_errors', 0);
 
-// Verificar que la petición sea POST
+// Solo permitir POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
-    echo json_encode(['success' => false, 'message' => 'Método no permitido']);
     exit;
 }
 
-// Inicializar respuesta
-$response = ['success' => false, 'message' => ''];
-
-try {
-    // Crear tablas si no existen
-    createTables();
-    
-    // Obtener y validar datos
-    $nombre = sanitizeInput($_POST['nombre'] ?? '');
-    $email = sanitizeInput($_POST['email'] ?? '');
-    $telefono = sanitizeInput($_POST['telefono'] ?? '');
-    $ciudad = sanitizeInput($_POST['ciudad'] ?? '');
-    $tipo_seguro = sanitizeInput($_POST['tipo-seguro'] ?? '');
-    $marca_modelo = sanitizeInput($_POST['marca-modelo'] ?? '');
-    $direccion_hogar = sanitizeInput($_POST['direccion-hogar'] ?? '');
-    $mensaje = sanitizeInput($_POST['mensaje'] ?? '');
-    
-    // Validaciones
-    if (empty($nombre)) {
-        throw new Exception('El nombre es obligatorio');
-    }
-    
-    if (empty($email) || !validateEmail($email)) {
-        throw new Exception('El email es obligatorio y debe ser válido');
-    }
-    
-    if (empty($tipo_seguro)) {
-        throw new Exception('Debe seleccionar un tipo de seguro');
-    }
-    
-    // Conectar a la base de datos
-    $pdo = getDBConnection();
-    if (!$pdo) {
-        throw new Exception('Error de conexión a la base de datos');
-    }
-    
-    // Insertar en la base de datos
-    $sql = "INSERT INTO cotizaciones (nombre, email, telefono, ciudad, tipo_seguro, marca_modelo, direccion_hogar, mensaje, ip_address, user_agent) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([
-        $nombre,
-        $email,
-        $telefono,
-        $ciudad,
-        $tipo_seguro,
-        $marca_modelo,
-        $direccion_hogar,
-        $mensaje,
-        getClientIP(),
-        $_SERVER['HTTP_USER_AGENT'] ?? ''
-    ]);
-    
-    $cotizacion_id = $pdo->lastInsertId();
-    
-    // Preparar datos para el email
-    $email_data = [
-        'id' => $cotizacion_id,
-        'nombre' => $nombre,
-        'email' => $email,
-        'telefono' => $telefono,
-        'ciudad' => $ciudad,
-        'tipo_seguro' => $tipo_seguro,
-        'marca_modelo' => $marca_modelo,
-        'direccion_hogar' => $direccion_hogar,
-        'mensaje' => $mensaje
-    ];
-    
-    // Crear template de email
-    $asunto = "Nueva Solicitud de Cotización - CFA & Asociados";
-    $mensaje_email = createCotizacionEmailTemplate($email_data);
-    
-    // Enviar email a ambos destinatarios
-    $recipients = [EMAIL_TO_PRIMARY, EMAIL_TO_SECONDARY];
-    $email_results = sendEmailToMultiple($recipients, $asunto, $mensaje_email);
-    
-    $email_enviado = true;
-    foreach ($email_results as $result) {
-        if (!$result) {
-            $email_enviado = false;
-            break;
-        }
-    }
-    
-    if ($email_enviado) {
-        $response['success'] = true;
-        $response['message'] = '¡Gracias por confiar en nosotros! 😊 En breve recibirás en tu email las opciones de seguro cotizadas. Ante cualquier duda, estamos para ayudarte.';
-    } else {
-        $response['success'] = true;
-        $response['message'] = 'Tu solicitud ha sido registrada correctamente. Te contactaremos pronto.';
-    }
-    
-} catch (Exception $e) {
-    error_log("Error en process_cotizacion.php: " . $e->getMessage());
-    $response['message'] = 'Hubo un error al procesar tu solicitud. Por favor, intentá nuevamente.';
+// Verificar datos requeridos
+if (empty($_POST['nombre']) || empty($_POST['email']) || empty($_POST['tipo-seguro'])) {
+    http_response_code(400);
+    exit;
 }
 
-// Enviar respuesta JSON
-header('Content-Type: application/json');
-echo json_encode($response);
+// Sanitizar datos
+$nombre = trim(htmlspecialchars($_POST['nombre']));
+$email = trim($_POST['email']);
+$telefono = !empty($_POST['telefono']) ? trim(htmlspecialchars($_POST['telefono'])) : '';
+$ciudad = !empty($_POST['ciudad']) ? trim(htmlspecialchars($_POST['ciudad'])) : '';
+$tipo_seguro = trim(htmlspecialchars($_POST['tipo-seguro']));
+$marca_modelo = !empty($_POST['marca-modelo']) ? trim(htmlspecialchars($_POST['marca-modelo'])) : '';
+$direccion_hogar = !empty($_POST['direccion-hogar']) ? trim(htmlspecialchars($_POST['direccion-hogar'])) : '';
+$mensaje = !empty($_POST['mensaje']) ? trim(htmlspecialchars($_POST['mensaje'])) : '';
+
+// Validar email
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    http_response_code(400);
+    exit;
+}
+
+// Conectar a BD
+try {
+    $pdo = new PDO('mysql:host=localhost;dbname=cfasegur_contactos;charset=utf8mb4', 'cfasegur_usuario', 'RudolfSteiner98*');
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+    // Insertar en BD
+    $sql = "INSERT INTO cotizaciones (nombre, email, telefono, ciudad, tipo_seguro, marca_modelo, direccion_hogar, mensaje, ip_address, user_agent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+        $nombre, $email, $telefono, $ciudad, $tipo_seguro, $marca_modelo, $direccion_hogar, $mensaje,
+        $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1',
+        $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown'
+    ]);
+    
+    $cotizacionId = $pdo->lastInsertId();
+    
+    // Preparar email
+    $tipo_seguro_nombres = [
+        'automotor' => 'Seguro Automotor',
+        'hogar' => 'Seguro de Hogar',
+        'accidentes' => 'Accidentes Personales',
+        'empresarial' => 'Seguros Empresariales',
+        'vida' => 'Seguro de Vida',
+        'otro' => 'Otro'
+    ];
+    
+    $tipo_seguro_nombre = $tipo_seguro_nombres[$tipo_seguro] ?? $tipo_seguro;
+    
+    $subject = "Nueva Solicitud de Cotización - CFA & Asociados";
+    $emailBody = "
+Nueva solicitud de cotización recibida:
+
+Nombre: $nombre
+Email: $email
+Teléfono: $telefono
+Ciudad: $ciudad
+Tipo de Seguro: $tipo_seguro_nombre";
+
+    if (!empty($marca_modelo)) {
+        $emailBody .= "
+Marca y Modelo: $marca_modelo";
+    }
+    
+    if (!empty($direccion_hogar)) {
+        $emailBody .= "
+Dirección del Hogar: $direccion_hogar";
+    }
+    
+    if (!empty($mensaje)) {
+        $emailBody .= "
+
+Mensaje:
+$mensaje";
+    }
+    
+    $emailBody .= "
+
+Fecha: " . date('d/m/Y H:i:s') . "
+IP: " . ($_SERVER['REMOTE_ADDR'] ?? '127.0.0.1') . "
+ID: $cotizacionId
+";
+    
+    $headers = "From: contacto@cfaseguros.com.ar\r\n";
+    $headers .= "Reply-To: contacto@cfaseguros.com.ar\r\n";
+    
+    // Enviar emails a todos los destinatarios
+    $emails = [
+        'info@cfaseguros.com.ar',
+        'joaco.molinos.jm@gmail.com'
+    ];
+    
+    foreach ($emails as $emailDestino) {
+        mail($emailDestino, $subject, $emailBody, $headers);
+    }
+    
+    // Respuesta JSON
+    header('Content-Type: application/json');
+    echo json_encode([
+        'success' => true,
+        'message' => '¡Gracias por confiar en nosotros! 😊 En breve recibirás en tu email las opciones de seguro cotizadas. Ante cualquier duda, estamos para ayudarte.'
+    ]);
+    
+} catch (Exception $e) {
+    header('Content-Type: application/json');
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Ha ocurrido un error. Por favor, intenta nuevamente.'
+    ]);
+}
 ?>

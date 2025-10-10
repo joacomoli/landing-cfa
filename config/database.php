@@ -9,9 +9,9 @@ define('DB_CHARSET', 'utf8mb4');
 // Configuración de email
 define('SMTP_HOST', 'mail.cfaseguros.com.ar');
 define('SMTP_PORT', 465);
-define('SMTP_USERNAME', 'contacto@cfaseguros.com.ar');
-define('SMTP_PASSWORD', 'RudolfSteiner98*');
-define('SMTP_FROM_EMAIL', 'contacto@cfaseguros.com.ar');
+define('SMTP_USERNAME', 'info@cfaseguros.com.ar');
+define('SMTP_PASSWORD', '*azul8665**');
+define('SMTP_FROM_EMAIL', 'info@cfaseguros.com.ar');
 define('SMTP_FROM_NAME', 'CFA & Asociados');
 
 // Emails de destino
