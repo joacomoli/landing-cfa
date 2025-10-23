@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeAnimations();
     initializeContactForm();
     initializeCarousel();
+    initializeAntiSpam();
+    initializeBrandsCarousel();
 });
 
 // Navegación móvil
@@ -128,6 +130,13 @@ function initializeForm() {
     });
 }
 
+// Inicializar anti‑spam (honeypot y timestamp)
+function initializeAntiSpam() {
+    const tsInputs = document.querySelectorAll('input[name="fp_timestamp"]');
+    const now = Date.now().toString();
+    tsInputs.forEach(i => { i.value = now; });
+}
+
 // Actualizar paso del formulario
 function updateFormStep() {
     const steps = document.querySelectorAll('.form-step');
@@ -186,6 +195,34 @@ function validateCurrentStep() {
         }
     });
 
+    // Validación especial para campos de automotor si está seleccionado
+    if (currentStep === 2) {
+        const tipoSeguro = document.getElementById('tipo-seguro');
+        if (tipoSeguro.value === 'automotor') {
+            const marcaVehiculo = document.getElementById('marca-vehiculo');
+            const modeloVehiculo = document.getElementById('modelo-vehiculo');
+            const anioVehiculo = document.getElementById('anio-vehiculo');
+            const tipoPoliza = document.getElementById('tipo-poliza');
+            
+            if (!marcaVehiculo.value.trim()) {
+                showFieldError(marcaVehiculo, 'Por favor ingresá la marca del vehículo');
+                isValid = false;
+            }
+            if (!modeloVehiculo.value.trim()) {
+                showFieldError(modeloVehiculo, 'Por favor ingresá el modelo del vehículo');
+                isValid = false;
+            }
+            if (!anioVehiculo.value.trim()) {
+                showFieldError(anioVehiculo, 'Por favor ingresá el año del vehículo');
+                isValid = false;
+            }
+            if (!tipoPoliza.value) {
+                showFieldError(tipoPoliza, 'Por favor seleccioná el tipo de póliza');
+                isValid = false;
+            }
+        }
+    }
+
     return isValid;
 }
 
@@ -226,6 +263,24 @@ function validateField(field) {
     }
 
     return isValid;
+}
+
+// Función auxiliar para mostrar errores personalizados
+function showFieldError(field, message) {
+    const fieldGroup = field.closest('.form-group');
+    
+    // Remover mensajes de error anteriores
+    const existingError = fieldGroup.querySelector('.error-message');
+    if (existingError) {
+        existingError.remove();
+    }
+    
+    // Mostrar error
+    field.style.borderColor = '#dc3545';
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
+    errorDiv.textContent = message;
+    fieldGroup.appendChild(errorDiv);
 }
 
 // Validar email
@@ -697,6 +752,125 @@ function lazyLoadImages() {
 // Inicializar lazy loading si hay imágenes
 document.addEventListener('DOMContentLoaded', lazyLoadImages);
 
+// Carrusel de marcas con funcionalidad de arrastre
+function initializeBrandsCarousel() {
+    const brandsTrack = document.querySelector('.brands-track');
+    const brandsWrapper = document.querySelector('.brands-wrapper');
+    
+    if (!brandsTrack || !brandsWrapper) {
+        return;
+    }
+    
+    let isDragging = false;
+    let startX = 0;
+    let currentTranslate = 0;
+    let animationId = null;
+    let autoScrollSpeed = 1; // px por frame
+    let direction = -1; // -1 para izquierda, 1 para derecha
+    let isPaused = false;
+    
+    // Iniciar scroll automático
+    function startAutoScroll() {
+        if (isPaused) return;
+        
+        function animate() {
+            if (!isDragging && !isPaused) {
+                currentTranslate += autoScrollSpeed * direction;
+                
+                // Reset cuando llega al final
+                const trackWidth = brandsTrack.scrollWidth / 2; // Dividido por 2 porque duplicamos los elementos
+                if (Math.abs(currentTranslate) >= trackWidth) {
+                    currentTranslate = 0;
+                }
+                
+                brandsTrack.style.transform = `translateX(${currentTranslate}px)`;
+            }
+            animationId = requestAnimationFrame(animate);
+        }
+        animate();
+    }
+    
+    // Pausar scroll automático
+    function pauseAutoScroll() {
+        isPaused = true;
+        if (animationId) {
+            cancelAnimationFrame(animationId);
+        }
+    }
+    
+    // Reanudar scroll automático
+    function resumeAutoScroll() {
+        isPaused = false;
+        startAutoScroll();
+    }
+    
+    // Eventos de mouse
+    brandsTrack.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.clientX;
+        brandsTrack.classList.add('dragging');
+        pauseAutoScroll();
+        e.preventDefault();
+    });
+    
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        
+        const deltaX = e.clientX - startX;
+        const newTranslate = currentTranslate + deltaX;
+        brandsTrack.style.transform = `translateX(${newTranslate}px)`;
+    });
+    
+    document.addEventListener('mouseup', () => {
+        if (isDragging) {
+            isDragging = false;
+            brandsTrack.classList.remove('dragging');
+            resumeAutoScroll();
+        }
+    });
+    
+    // Eventos táctiles para móvil
+    brandsTrack.addEventListener('touchstart', (e) => {
+        isDragging = true;
+        startX = e.touches[0].clientX;
+        brandsTrack.classList.add('dragging');
+        pauseAutoScroll();
+    });
+    
+    brandsTrack.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        
+        const deltaX = e.touches[0].clientX - startX;
+        const newTranslate = currentTranslate + deltaX;
+        brandsTrack.style.transform = `translateX(${newTranslate}px)`;
+        e.preventDefault();
+    });
+    
+    brandsTrack.addEventListener('touchend', () => {
+        if (isDragging) {
+            isDragging = false;
+            brandsTrack.classList.remove('dragging');
+            resumeAutoScroll();
+        }
+    });
+    
+    // Pausar al hacer hover
+    brandsWrapper.addEventListener('mouseenter', pauseAutoScroll);
+    brandsWrapper.addEventListener('mouseleave', resumeAutoScroll);
+    
+    // Pausar cuando la página no está visible
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            pauseAutoScroll();
+        } else {
+            resumeAutoScroll();
+        }
+    });
+    
+    // Iniciar animación
+    startAutoScroll();
+}
+
 // Carousel de servicios
 function initializeCarousel() {
     const carouselTrack = document.getElementById('carousel-track');
@@ -710,7 +884,7 @@ function initializeCarousel() {
     }
     
     let currentSlide = 0;
-    const totalSlides = 4;
+    const totalSlides = 12;
     
     function updateCarousel() {
         const translateX = -currentSlide * 100;

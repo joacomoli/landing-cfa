@@ -9,7 +9,12 @@ CREATE TABLE IF NOT EXISTS cotizaciones (
     telefono VARCHAR(50),
     ciudad VARCHAR(100),
     tipo_seguro VARCHAR(100),
-    marca_modelo VARCHAR(255),
+    -- Campos específicos de vehículo
+    marca_vehiculo VARCHAR(100),
+    modelo_vehiculo VARCHAR(150),
+    anio_vehiculo VARCHAR(4),
+    tipo_poliza VARCHAR(50),
+    -- Campos de otros seguros
     direccion_hogar VARCHAR(255),
     mensaje TEXT,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

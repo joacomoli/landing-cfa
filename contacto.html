@@ -43,6 +43,7 @@
                         <li class="nav-item"><a href="index.html" class="nav-link">Inicio</a></li>
                         <li class="nav-item"><a href="index.html#servicios" class="nav-link">Servicios</a></li>
                         <li class="nav-item"><a href="index.html#beneficios" class="nav-link">Beneficios</a></li>
+                        <li class="nav-item"><a href="quienes-somos.html" class="nav-link">Quienes somos</a></li>
                         <li class="nav-item"><a href="index.html#cotizacion" class="nav-link">Cotización</a></li>
                         <li class="nav-item"><a href="contacto.html" class="nav-link active">Contacto</a></li>
                     </ul>
@@ -62,7 +63,7 @@
         <div class="container">
             <div class="contacto-hero-content">
                 <h1 class="contacto-hero-title">Contactanos</h1>
-                <p class="contacto-hero-subtitle">Estamos para ayudarte. Elegí la forma de contacto que te resulte más cómoda y te responderemos a la brevedad.</p>
+                <p class="contacto-hero-subtitle" style="color: var(--blanco);">Estamos para ayudarte. Elegí la forma de contacto que te resulte más cómoda y te responderemos a la brevedad.</p>
             </div>
         </div>
     </section>
@@ -108,17 +109,6 @@
                                 <span>Respuesta en 2 horas</span>
                             </div>
                         </div>
-                        
-                        <div class="contact-method">
-                            <div class="contact-icon">
-                                <i class="fas fa-map-marker-alt"></i>
-                            </div>
-                            <div class="contact-details">
-                                <h3>Oficina</h3>
-                                <p>Buenos Aires, Argentina</p>
-                                <span>Consultar dirección</span>
-                            </div>
-                        </div>
                     </div>
 
                 </div>
@@ -129,6 +119,14 @@
                         <p class="form-description">Completá el formulario y te contactaremos a la brevedad para resolver tu consulta.</p>
                         
                         <form id="contacto-form" action="contact.php" method="POST">
+                            <!-- Anti-spam -->
+                            <div class="honeypot" aria-hidden="true">
+                                <label>Dejar en blanco</label>
+                                <input type="text" name="website" tabindex="-1" autocomplete="off">
+                                <input type="text" name="url" tabindex="-1" autocomplete="off">
+                                <input type="text" name="link" tabindex="-1" autocomplete="off">
+                            </div>
+                            <input type="hidden" name="fp_timestamp" value="">
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="contact-nombre">Nombre completo *</label>
@@ -238,7 +236,7 @@
                     <div class="footer-section">
                         <h4>Empresa</h4>
                         <ul>
-                            <li><a href="index.html#beneficios">Sobre Nosotros</a></li>
+                            <li><a href="quienes-somos.html">Quienes somos</a></li>
                             <li><a href="contacto.html">Contacto</a></li>
                             <li><a href="index.html#cotizacion">Cotización</a></li>
                             <li><a href="#">Términos y Condiciones</a></li>

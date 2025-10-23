@@ -406,6 +406,8 @@ p {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 .servicio-card {
@@ -599,19 +601,23 @@ p {
 
 .carousel-dots {
     display: flex;
-    gap: 12px;
+    gap: 8px;
     align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 100%;
 }
 
 .dot {
-    width: 14px;
-    height: 14px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     background-color: var(--gris-borde);
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     position: relative;
     border: 2px solid transparent;
+    flex-shrink: 0;
 }
 
 .dot::before {
@@ -619,8 +625,8 @@ p {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 6px;
-    height: 6px;
+    width: 4px;
+    height: 4px;
     border-radius: 50%;
     background-color: var(--gris-medio);
     transform: translate(-50%, -50%);
@@ -644,8 +650,8 @@ p {
 
 .dot.active::before {
     background-color: var(--azul-principal);
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
 }
 
 /* Beneficios Section */
@@ -1583,4 +1589,84 @@ p {
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--azul-secundario);
+}
+
+/* Carrusel de marcas */
+.brands {
+    padding: 30px 0;
+    background: var(--gris-claro);
+    border-top: 1px solid var(--gris-borde);
+    border-bottom: 1px solid var(--gris-borde);
+}
+
+.brands-wrapper {
+    overflow: hidden;
+    position: relative;
+}
+
+.brands-track {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    will-change: transform;
+    cursor: grab;
+    user-select: none;
+}
+
+.brands-track.dragging {
+    cursor: grabbing;
+    animation-play-state: paused;
+}
+
+.brands-track.auto-scroll {
+    animation: brands-scroll 30s linear infinite;
+}
+
+.brand-item {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 20px;
+    border: 1px solid var(--gris-borde);
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+    min-width: 120px;
+    height: 80px;
+}
+
+.brand-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border-color: var(--azul-secundario);
+}
+
+.brand-logo {
+    max-width: 100%;
+    max-height: 50px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    filter: grayscale(100%) opacity(0.7);
+    transition: all 0.3s ease;
+}
+
+.brand-item:hover .brand-logo {
+    filter: grayscale(0%) opacity(1);
+}
+
+@keyframes brands-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* Honeypot (anti‑spam) */
+.honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
 }
